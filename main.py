@@ -9,7 +9,7 @@ text of 1 to 120 characters, not only white space.
 import os
 import sys
 
-ENTRY = "The bug you cannot reproduce is not hiding \u2014 it is rehearsing for the live demo."
+ENTRY = "The bug that never shows for you is saving its finest performance for the live demo."
 
 MAX_CHARS = 120
 
@@ -23,6 +23,14 @@ def validate(text: str) -> None:
         raise ValueError(f"entry is {len(text)} chars, over the {MAX_CHARS} limit")
     if "\n" in text.strip():
         raise ValueError("entry must be a single line")
+    if any(ord(c) < 32 for c in text):
+        raise ValueError("entry must not contain control characters")
+    if text != text.strip():
+        raise ValueError("entry must not have leading or trailing white space")
+    if not text.endswith("."):
+        raise ValueError("entry must end with a full stop, one balanced sentence")
+    if text.count(".") != 1:
+        raise ValueError("entry must be exactly one sentence")
 
 
 def main() -> int:
